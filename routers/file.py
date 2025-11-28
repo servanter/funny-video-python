@@ -16,13 +16,14 @@ Path(UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 
 # 上传文件接口
 @router.post("/upload", summary="上传文件")
-async def upload_file(file: UploadFile, user_id: str, title: str, description: str):
-    result = save_uploaded_file(file, user_id, title, description)
+async def upload_file(file: UploadFile,selected_moments: str, user_id: str = "", title: str = "", description: str = ""):
+    result = save_uploaded_file(file, user_id, title, description, selected_moments)
     return {"message": "上传成功", "result": result}
 
 # 上传文件接口
 @router.post("/test_save", summary="上传文件")
-async def test_save(file: UploadFile, user_id: str, title: str, description: str):
+async def test_save(file: UploadFile, user_id: str, title: str, description: str, selected_moments: str):
+    print("test_save----->", selected_moments)
     result = test_save_file(file, user_id, title, description)
     return {"message": "上传成功", "result": result}
 

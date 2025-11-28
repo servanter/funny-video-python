@@ -13,7 +13,7 @@ import re
 import os
 
 
-def extract_video_image(video):
+def extract_video_image(video, moments: str):
     """
     截取视频的指定时间点的图片
     :param video: Video 对象，包含视频文件路径和上传目录
@@ -36,7 +36,9 @@ def extract_video_image(video):
     total_seconds = hours * 3600 + minutes * 60 + seconds
 
     # 定义需要截取的时间点（秒）
-    timestamps = [4, 8]
+
+    timestamps = str2int(moments)
+    print('timestamps------>', timestamps)
 
     for timestamp in timestamps:
         if timestamp > total_seconds:
@@ -55,6 +57,8 @@ def extract_video_image(video):
         except subprocess.CalledProcessError as e:
             print(f"截取第 {timestamp} 秒图片失败: {e}")
 
+def str2int(s):
+    return [int(i.strip()) for i in s.split(',') if i.strip()]
 
 def extract_video_segments(video):
     """
@@ -316,6 +320,10 @@ def upload_and_save(video, title: str, description: str, user_id: int):
     insert_video_with_supabase_sdk(user_id=user_id, title=title, description=description,
                                    first_image_url=first_image_url, result_video_url=result_video_url, duration=duration)
 
+    video.first_image_url = first_image_url
+    video.result_video_url = result_video_url
+
+    print("video result--------->: ", video)
     upload_to_supabase(
         local_file_path=first_image_path,
         storage_file_path=first_image_url  # 可选：自定义存储路径
@@ -325,6 +333,9 @@ def upload_and_save(video, title: str, description: str, user_id: int):
         local_file_path=merged_video_path,
         storage_file_path=result_video_url  # 可选：自定义存储路径
     )
+
+
+
 
     pass
 
@@ -373,7 +384,7 @@ def test_save_file(uploaded_file:UploadFile, user_id: str, title: str, descripti
 
 
 
-def save_uploaded_file(uploaded_file:UploadFile, user_id: str, title: str, description:str):
+def save_uploaded_file(uploaded_file:UploadFile, user_id: str, title: str, description:str, selected_moments: str):
     """
     保存上传的文件到以时间戳命名的文件夹中
     :param uploaded_file: 上传的文件对象（需支持 .name 和 .read() 方法）
