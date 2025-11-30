@@ -58,7 +58,9 @@ def extract_video_image(video, moments: str):
             print(f"截取第 {timestamp} 秒图片失败: {e}")
 
 def str2int(s):
-    return [int(i.strip()) for i in s.split(',') if i.strip()]
+    seconds = [int(i.strip()) for i in s.split(',') if i.strip()]
+    seconds.sort()
+    return seconds
 
 def extract_video_segments(video):
     """
@@ -421,7 +423,7 @@ def save_uploaded_file(uploaded_file:UploadFile, user_id: str, title: str, descr
     video = Video(file_path=file_path, upload_dir=upload_dir, duration=duration if 'duration' in locals() else None)
 
     # # 调用截图方法
-    extract_video_image(video)
+    extract_video_image(video, selected_moments)
 
     # # 调用阿里云接口
     aliyun_service.generate_funny_images(video)
