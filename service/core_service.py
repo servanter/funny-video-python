@@ -489,7 +489,8 @@ def merge_video(video):
 
     # 拼接视频
     output_path = os.path.join(result_dir, "merged.mp4")
-    cmd = f"ffmpeg -f concat -safe 0 -i {list_path} -stream_loop -1 -i bgm.mp3 -c:v libx264 -profile:v high -filter_complex \"[0:a]volume=1.0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a1]; [1:a]volume=0.5, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a2]; [a1][a2]amerge=inputs=2, pan=stereo|c0<c0+c1|c1<c0+c1[aout]\" -map 0:v -map \"[aout]\" -c:a aac -profile:a aac_low -b:a 128k -ar 48000 -shortest {output_path}"
+    #cmd = f"ffmpeg -f concat -safe 0 -i {list_path} -stream_loop -1 -i bgm.mp3 -c:v libx264 -profile:v high -filter_complex \"[0:a]volume=1.0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a1]; [1:a]volume=0.5, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a2]; [a1][a2]amerge=inputs=2, pan=stereo|c0<c0+c1|c1<c0+c1[aout]\" -map 0:v -map \"[aout]\" -c:a aac -profile:a aac_low -b:a 128k -ar 48000 -shortest {output_path}"
+    cmd = f"ffmpeg -f concat -safe 0 -i {list_path} -stream_loop -1 -i bgm.mp3 -c:v libx264 -profile:v high -filter_complex \"[0:a]volume=1.0, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a1]; [1:a]adelay=1000|1000,volume=0.5, aformat=sample_fmts=fltp:sample_rates=48000:channel_layouts=mono[a2]; [a1][a2]amerge=inputs=2, pan=stereo|c0<c0+c1|c1<c0+c1[aout]\" -map 0:v -map \"[aout]\" -c:a aac -profile:a aac_low -b:a 128k -ar 48000 -shortest {output_path}"
     print('拼接视频cmd:', cmd)
     try:
         subprocess.run(cmd, shell=True, check=True)
