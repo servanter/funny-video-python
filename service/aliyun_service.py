@@ -36,7 +36,7 @@ def generate_funny_images(video: Video):
             "Authorization": f"Bearer {DASHSCOPE_API_KEY}"
         }
         payload = {
-            "model": "qwen-image-edit-plus",
+            "model": "qwen-image-2.0",
             "input": {
                 "messages": [
                     {
